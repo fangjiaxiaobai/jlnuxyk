@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxb.jeesite.modules.oa.dao.QrDao">
+    
+	<sql id="qrColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.time AS "time",
+		a.startid AS "startid",
+		a.endid AS "endid",
+		a.filepath AS "filepath",
+		a.filename AS "filename"
+	</sql>
+	
+	<sql id="qrJoins">
+	</sql>
+    
+	<select id="get" resultType="Qr">
+		SELECT 
+			<include refid="qrColumns"/>
+		FROM qr a
+		<include refid="qrJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Qr">
+		SELECT 
+			<include refid="qrColumns"/>
+		FROM qr a ORDER BY time DESC
+			
+	</select>
+	
+	<select id="findAllList" resultType="Qr">
+		SELECT 
+			<include refid="qrColumns"/>
+		FROM qr a
+		
+		ORDER BY time desc
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO qr(
+			id,
+			name,
+			time,
+			startid,
+			endid,
+			filepath,
+			filename
+		) VALUES (
+			#{id},
+			#{name},
+			#{time},
+			#{startid},
+			#{endid},
+			#{filepath},
+			#{filename}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE qr SET 	
+			name = #{name},
+			time = #{time},
+			startid = #{startid},
+			endid = #{endid},
+			filepath = #{filepath},
+			filename = #{filename}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM qr
+		WHERE id = #{id}
+	</update>
+	
+	
+</mapper>

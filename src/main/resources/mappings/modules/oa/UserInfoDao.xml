@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxb.jeesite.modules.oa.dao.UserInfoDao">
+    
+	<sql id="userInfoColumns">
+		a.id AS "id",
+		a.idcard AS "idcard",
+		a.name AS "name",
+		a.xykid AS "xykid",
+		a.uid AS "uid",
+		a.sex AS "sex",
+		a.academy AS "academy",
+		a.profession AS "profession",
+		a.class_ AS "class_",
+		a.phonenumber AS "phonenumber",
+		a.photo AS "photo",
+		a.time_havecard AS "timeHavecard",
+		a.times_card AS "timesCard",
+		a.grade AS "grade",
+		a.flag AS "flag"
+	</sql>
+	
+	<sql id="userInfoJoins">
+	</sql>
+
+
+    <sql id="whereClause">
+        <where>
+            <if test="name != null and name != ''">
+                AND a.name LIKE
+                <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+            </if>
+            <if test="flag!=null and flag!=''">
+                AND a.flag = #{flag}
+            </if>
+            <if test="uid!=null and uid!=''">
+                AND a.uid LIKE
+                <if test="dbName == 'oracle'">'%'||#{uid}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{uid}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{uid},'%')</if>
+            </if>
+            <if test="xykid!=null and xykid!=''">
+                AND a.xykid LIKE
+                <if test="dbName == 'oracle'">'%'||#{xykid}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{xykid}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{xykid},'%')</if>
+            </if>
+            <if test="idcard!=null and idcard!=''">
+                AND a.idcard LIKE
+                <if test="dbName == 'oracle'">'%'||#{idcard}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{idcard}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{idcard},'%')</if>
+            </if>
+        </where>
+    </sql>
+
+	<select id="get" resultType="UserInfo">
+		SELECT 
+			<include refid="userInfoColumns"/>
+		FROM user_info a
+		<include refid="userInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="UserInfo">
+		SELECT 
+			<include refid="userInfoColumns"/>
+		FROM user_info a
+            <include refid="userInfoJoins"/>
+            <include refid="whereClause"/>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserInfo" parameterType="com.fxb.jeesite.modules.oa.entity.UserInfo">
+		SELECT 
+			<include refid="userInfoColumns"/>
+		FROM user_info a
+		<include refid="userInfoJoins"/>
+        <include refid="whereClause"/>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_info(
+			id,
+			idcard,
+			name,
+			xykid,
+			uid,
+			sex,
+			academy,
+			profession,
+			class_,
+			phonenumber,
+			photo,
+			time_havecard,
+			times_card,
+			grade,
+			flag
+		) VALUES (
+			#{id},
+			#{idcard},
+			#{name},
+			#{xykid},
+			#{uid},
+			#{sex},
+			#{academy},
+			#{profession},
+			#{class_},
+			#{phonenumber},
+			#{photo},
+			#{timeHavecard},
+			#{timesCard},
+			#{grade},
+			#{flag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_info SET 	
+			flag = #{flag},
+			idcard = #{idcard},
+			name = #{name},
+			xykid = #{xykid},
+			uid = #{uid},
+			sex = #{sex},
+			academy = #{academy},
+			profession = #{profession},
+			class_ = #{class_},
+			phonenumber = #{phonenumber},
+			photo = #{photo},
+			time_havecard = #{timeHavecard},
+			times_card = #{timesCard},
+			grade = #{grade}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM user_info
+		WHERE id = #{id}
+	</update>
+
+    <update id="restore" parameterType="com.fxb.jeesite.modules.oa.entity.UserInfo" >
+        UPDATE user_info set flag = ${flag} where id=#{id}
+    </update>
+
+    <select id="findDistrictGrade" resultType="java.lang.Integer">
+        select DISTINCT grade from user_info
+    </select>
+
+    <select id="getRowCounts" resultType="java.lang.Integer" parameterType="com.fxb.jeesite.modules.oa.entity.UserInfo">
+        select count(uid) FROM  user_info where xykid LIKE '${grade}%'
+    </select>
+    <select id="getCardCounts" resultType="java.lang.Integer" parameterType="com.fxb.jeesite.modules.oa.entity.UserInfo">
+        select count(xykid) FROM  user_info where xykid LIKE '${grade}%'
+    </select>
+
+</mapper>

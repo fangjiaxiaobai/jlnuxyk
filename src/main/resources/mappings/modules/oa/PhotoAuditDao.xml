@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxb.jeesite.modules.oa.dao.PhotoAuditDao">
+    
+	<sql id="photoAuditColumns">
+		a.id AS "id",
+		a.idcard AS "idcard",
+		a.xykid AS "xykid",
+		a.auditstats AS "auditstats",
+		a.auditreason AS "auditreason",
+		a.photo_old AS "photoOld",
+		a.photo_new AS "photoNew",
+		a.time AS "time"
+	</sql>
+	
+	<sql id="photoAuditJoins">
+	</sql>
+	<sql id="whereClause">
+		<where>
+			<if test="idcard != null and idcard != ''">
+				AND a.idcard LIKE
+				<if test="dbName == 'oracle'">'%'||#{idcard}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{idcard}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{idcard},'%')</if>
+			</if>
+			<if test="auditstats!=null and auditstats!=''">
+				AND a.auditstats = #{auditstats}
+			</if>
+			<if test="xykid!=null and xykid!=''">
+				AND a.xykid =
+				<if test="dbName == 'oracle'">'%'||#{xykid}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{xykid}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{xykid},'%')</if>
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="updateClause">
+		<if test="idcard!=null and idcard!=''">
+		auditstats = #{auditstats}
+		</if>
+		<if test="idcard!=null and idcard!=''">
+			,auditreason = #{auditreason}
+		</if>
+		<if test="idcard!=null and idcard!=''">
+			,time = #{time}
+		</if>
+	</sql>
+	
+	
+	<select id="get" resultType="PhotoAudit">
+		SELECT 
+			<include refid="photoAuditColumns"/>
+		FROM photo_audit a
+		<include refid="photoAuditJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PhotoAudit">
+		SELECT 
+			<include refid="photoAuditColumns"/>
+		FROM photo_audit a
+		<include refid="photoAuditJoins"/>
+		<include refid="whereClause" />
+		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PhotoAudit">
+		SELECT 
+			<include refid="photoAuditColumns"/>
+		FROM photo_audit a
+		<include refid="photoAuditJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO photo_audit(
+			id,
+			idcard,
+			xykid,
+			auditstats,
+			auditreason,
+			photo_old,
+			photo_new,
+			time
+		) VALUES (
+			#{id},
+			#{idcard},
+			#{xykid},
+			#{auditstats},
+			#{auditreason},
+			#{photoOld},
+			#{photoNew},
+			#{time}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE photo_audit SET 	
+			<include refid="updateClause" />
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM photo_audit
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
