@@ -15,7 +15,7 @@ cd %~dp0
 cd..
 
 set MAVEN_OPTS=%MAVEN_OPTS% -Xms256m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=256m
-call mvn tomcat7:run
+call mvn tomcat7:run -Dmaven.tomcat.uriEncoding=UTF-8 -Dmaven.tomcat.path=/ -Dmaven.tomcat.port=8080
 
 cd bin
 pause
