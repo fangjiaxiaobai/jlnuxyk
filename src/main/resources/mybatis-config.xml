@@ -38,7 +38,7 @@
         <setting name="jdbcTypeForNull" value="NULL"/>
 		
 		<!-- 生成sql 在控制台输出  -->
-		<setting name="logImpl" value="STDOUT_LOGGING" />
+		<!--<setting name="logImpl" value="STDOUT_LOGGING" />-->
 	</settings>
 	
 	<!-- 类型别名 -->
